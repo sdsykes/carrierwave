@@ -439,6 +439,20 @@ for the RMagick processor.
       process :resize_to_fill => [200, 200]
     end
 
+== Using FastImageResize
+
+FastImageResize, which utilises the gd library, works in a similar way to the other image manipulation options.
+
+    class AvatarUploader < CarrierWave::Uploader::Base
+      include CarrierWave::FastImageResize
+
+      process :resize_to_fit => [200, 200]
+    end
+
+Find more information about FastImageResize:
+
+http://github.com/sdsykes/fastimage_resize
+
 == Migrating
 
 If you are using Paperclip, you can use the provided compatibility module:
@@ -488,6 +502,7 @@ These people have contributed their time and effort to CarrierWave:
 * Andreas Haller
 * Lars Pind
 * Ramon Soares
+* Stephen Sykes
 
 == License
 
