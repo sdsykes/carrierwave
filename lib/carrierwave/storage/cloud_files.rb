@@ -15,12 +15,11 @@ module CarrierWave
     #       config.cloud_files_container = "my_container"
     #     end
     #
+    # You can optionally include your CDN host name in the configuration.
+    # This is *highly* recommended, as without it every request requires a lookup
+    # of this information.
     #
-    # You can set the access policy for the uploaded files:
-    #
-    #     CarrierWave.configure do |config|
-    #       config.s3_access_policy = 'public-read'
-    #     end
+    #   config.cloud_files_cdn_host = "c000000.cdn.rackspacecloud.com"
     #
     #
     class CloudFiles < Abstract
@@ -73,12 +72,12 @@ module CarrierWave
         # [String] file's url
         #
         def url
-          cf_container.object(@path).public_url
+          if @uploader.cloud_files_cdn_host
+            "http://" + @uploader.cloud_files_cdn_host + "/" + @path
+          else
+            cf_container.object(@path).public_url
+          end
         end
-
-        #def metadata
-        #  s3_object.metadata
-        #end
 
         def content_type
           cf_container.object(@path).content_type
@@ -140,7 +139,7 @@ module CarrierWave
       #
       # === Returns
       #
-      # [CarrierWave::Storage::RightS3::File] the stored file
+      # [CarrierWave::Storage::CloudFiles::File] the stored file
       #
       def store!(file)
         cloud_files_options = {'Content-Type' => file.content_type}
@@ -157,7 +156,7 @@ module CarrierWave
       #
       # === Returns
       #
-      # [CarrierWave::Storage::RightS3::File] the stored file
+      # [CarrierWave::Storage::CloudFiles::File] the stored file
       #
       def retrieve!(identifier)
         CarrierWave::Storage::CloudFiles::File.new(uploader, self, uploader.store_path(identifier))

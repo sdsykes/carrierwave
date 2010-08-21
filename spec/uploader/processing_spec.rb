@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-require File.dirname(__FILE__) + '/../spec_helper'
+require 'spec_helper'
 
 describe CarrierWave::Uploader do
 
@@ -67,6 +67,18 @@ describe CarrierWave::Uploader do
     it "should trigger a process!" do
       @uploader.should_receive(:process!)
       @uploader.cache!(File.open(file_path('test.jpg')))
+    end
+  end
+
+  describe '#recreate_versions!' do
+    before do
+      CarrierWave.stub!(:generate_cache_id).and_return('20071201-1234-345-2255')
+    end
+
+    it "should trigger a process!" do
+      @uploader.store!(File.open(file_path('test.jpg')))
+      @uploader.should_receive(:process!)
+      @uploader.recreate_versions!
     end
   end
 

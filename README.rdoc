@@ -14,6 +14,7 @@ upload files.
 * Please {report any issues}[http://github.com/jnicklas/carrierwave/issues] on GitHub
 * Please direct any questions at the {mailing list}[http://groups.google.com/group/carrierwave]
 * Check out the {example app}[http://github.com/jnicklas/carrierwave-example-app]
+* Instructions for setting up a development environment are at the bottom of this file
 
 == Getting Started
 
@@ -66,7 +67,7 @@ Most of the time you are going to want to use CarrierWave together with an ORM.
 It is quite simple to mount uploaders on columns in your model, so you can
 simply assign files and get going:
 
-=== ActiveRecord, DataMapper, Sequel, MongoMapper
+=== ActiveRecord, DataMapper, Sequel, Mongoid
 
 Make sure you are loading CarrierWave after loading your ORM, otherwise you'll
 need to require the relevant extension manually, e.g.:
@@ -237,6 +238,22 @@ this easily by overriding the +default_url+ method in your uploader:
       end
     end
 
+== Recreating versions
+
+You might come to a situation where you want to retroactively change a version
+or add a new one. You can use the recreate_versions! method to recreate the
+versions from the base file. This uses a naive approach which will reupload and
+process all versions.
+
+   instance = MyUploader.new
+   instance.recreate_versions!
+
+Or on a mounted uploader:
+
+   User.all.each do |user|
+     user.avatar.recreate_versions!
+   end
+
 == Configuring CarrierWave
 
 CarrierWave has a broad range of configuration options, which you can configure,
@@ -338,6 +355,12 @@ You must also create a container for Carrierwave to use, and mark it public (pub
       config.cloud_files_api_key = 'xxxxxxxxxxxxxxxxxxxxx'
       config.cloud_files_container = 'name_of_bucket'
     end
+
+You can optionally include your CDN host name in the configuration.
+This is *highly* recommended, as without it every request requires a lookup
+of this information.
+
+    config.cloud_files_cdn_host = "c000000.cdn.rackspacecloud.com"
 
 Do this in an initializer in Rails, and in a +before_app_loads+ block in Merb.
 
@@ -461,7 +484,7 @@ If you are using Paperclip, you can use the provided compatibility module:
       include CarrierWave::Compatibility::Paperclip
     end
 
-See the documentation for <code>Paperclip::Compatibility::Paperclip</code> for more
+See the documentation for <code>CarrierWave::Compatibility::Paperclip</code> for more
 detaills.
 
 Be sure to use mount_on to specify the correct column:
@@ -529,14 +552,17 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 == Development
 
-If you want to run the tests (and you should) it might be convenient to install
-the development dependencies, you can do that with:
+In order to setup a development environment and run the specs, you'll
+need to install bundler:
 
-    sudo gem install carrierwave --development
+    gem install bundler --pre
 
-CarrierWave is still young, but most of it is pretty well documented. It is also
-extensively specced, and there are cucumber features for some common use cases.
-Just dig in and look at the source for more in-depth explanation of what things
-are doing.
+And then install the dependencies:
+
+    bundle install
+
+You should now be able to run the tests:
+
+    bundle exec rake spec
 
 Issues are reported on GitHub, pull requests are very welcome!

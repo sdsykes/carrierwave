@@ -1,14 +1,11 @@
 # encoding: utf-8
 
 require 'fileutils'
-require 'carrierwave/core_ext/file'
 require 'active_support/core_ext/object/blank'
 require 'active_support/core_ext/class/inheritable_attributes'
 require 'active_support/concern'
 
 module CarrierWave
-
-  VERSION = "0.4.5"
 
   class << self
     attr_accessor :root
@@ -34,6 +31,7 @@ module CarrierWave
   autoload :ImageScience, 'carrierwave/processing/image_science'
   autoload :MiniMagick, 'carrierwave/processing/mini_magick'
   autoload :FastImageResize, 'carrierwave/processing/fastimage_resize'
+  autoload :VERSION, 'carrierwave/version'
 
   module Storage
     autoload :Abstract, 'carrierwave/storage/abstract'
@@ -100,5 +98,4 @@ end
 require File.join(File.dirname(__FILE__), "carrierwave", "orm", 'activerecord') if defined?(ActiveRecord)
 require File.join(File.dirname(__FILE__), "carrierwave", "orm", 'datamapper') if defined?(DataMapper)
 require File.join(File.dirname(__FILE__), "carrierwave", "orm", 'sequel') if defined?(Sequel)
-require File.join(File.dirname(__FILE__), "carrierwave", "orm", "mongomapper") if defined?(MongoMapper)
 require File.join(File.dirname(__FILE__), "carrierwave", "orm", "mongoid") if defined?(Mongoid)

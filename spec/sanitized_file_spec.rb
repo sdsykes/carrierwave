@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-require File.dirname(__FILE__) + '/spec_helper'
+require 'spec_helper'
 
 describe CarrierWave::SanitizedFile do
 
@@ -274,6 +274,11 @@ describe CarrierWave::SanitizedFile do
       it "should set the right permissions" do
         new_file = @sanitized_file.copy_to(file_path('gurr.png'), 0755)
         new_file.should have_permissions(0755)
+      end
+      
+      it "should preserve the file's content type" do
+        new_file = @sanitized_file.copy_to(file_path('gurr.png'))
+        new_file.content_type.should ==(@sanitized_file.content_type)
       end
 
     end

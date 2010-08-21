@@ -116,7 +116,7 @@ module CarrierWave
           elsif defined? FastImage
             FastImageWrapper.new(filename)
           else
-            unless defined? Magick
+            unless defined? ::Magick
               begin
                 require 'rmagick'
               rescue LoadError

@@ -99,7 +99,7 @@ module CarrierWave
     #
     def convert(format)
       manipulate! do |img|
-        img.format(format.to_s.upcase)
+        img.format(format.to_s.downcase)
         img = yield(img) if block_given?
         img
       end
@@ -253,7 +253,7 @@ module CarrierWave
       image = yield(image)
       image.write(current_path)
       ::MiniMagick::Image.from_file(current_path)
-    rescue ::MiniMagick::MiniMagickError => e
+    rescue ::MiniMagick::Error => e
       raise CarrierWave::ProcessingError.new("Failed to manipulate with MiniMagick, maybe it is not an image? Original Error: #{e}")
     end
 
