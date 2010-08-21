@@ -111,8 +111,10 @@ module CarrierWave
 
       class ImageLoader # :nodoc:
         def self.load_image(filename)
-          if defined? MiniMagick
+          if defined? ::MiniMagick
             MiniMagickWrapper.new(filename)
+          elsif defined? FastImage
+            FastImageWrapper.new(filename)
           else
             unless defined? Magick
               begin
@@ -155,6 +157,14 @@ module CarrierWave
 
         def initialize(filename)
           @image = ::MiniMagick::Image.from_file(filename)
+        end
+      end
+
+      class FastImageWrapper # :nodoc:
+        attr_reader :width, :height
+
+        def initialize(filename)
+          @width, @height = FastImage.size(filename)
         end
       end
 

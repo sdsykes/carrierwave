@@ -58,6 +58,6 @@ module CarrierWave
         resize_to_fit(new_width, new_height)
       end
     end
-
+    
   end # FastImageResize
 end # CarrierWave

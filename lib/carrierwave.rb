@@ -33,6 +33,7 @@ module CarrierWave
   autoload :RMagick, 'carrierwave/processing/rmagick'
   autoload :ImageScience, 'carrierwave/processing/image_science'
   autoload :MiniMagick, 'carrierwave/processing/mini_magick'
+  autoload :FastImageResize, 'carrierwave/processing/fastimage_resize'
 
   module Storage
     autoload :Abstract, 'carrierwave/storage/abstract'
